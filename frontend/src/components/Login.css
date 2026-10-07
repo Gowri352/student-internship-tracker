@@ -1,0 +1,49 @@
+body{
+    margin:0;
+    font-family:Arial;
+    background:#eef2ff;
+}
+
+.login-container{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(to right,#6d28d9,#2563eb);
+}
+
+.login-card{
+    width:340px;
+    background:white;
+    padding:30px;
+    border-radius:12px;
+    text-align:center;
+}
+
+.login-card h2{
+    color:#5b21b6;
+}
+
+.login-card input{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    border-radius:6px;
+    border:1px solid gray;
+    box-sizing:border-box;
+}
+
+.login-card button{
+    width:100%;
+    padding:10px;
+    background:#5b21b6;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.login-card span{
+    color:blue;
+    cursor:pointer;
+}
