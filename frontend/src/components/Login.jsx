@@ -13,69 +13,70 @@ function Login({ setPage }) {
   const emailPattern =
     /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
+  const namePattern =
+  /^[A-Za-z ]{3,}$/;
 
   const handleSubmit = (e) => {
 
     e.preventDefault();
 
-
-    // ==============================
     // NAME VALIDATION
-    // ==============================
+    if (!isLogin) {
 
-    if (!isLogin && name.trim() === "") {
+      if (name.trim() === "") {
+        alert("Please enter your name");
+        return;
+      }
 
-      alert("Please Enter Your Name");
-
-      return;
-
+      if (!namePattern.test(name)) {
+        alert("Name should contain atleast 3 letters");
+        return;
+      }
     }
 
-
-    // ==============================
     // EMAIL VALIDATION
-    // ==============================
-
     if (!emailPattern.test(email)) {
-
-      alert("Please Enter Valid Email");
-
+      alert("Please enter a valid email");
       return;
-
     }
 
-
-    // ==============================
     // PASSWORD VALIDATION
-    // ==============================
-
-    if (password.trim() === "") {
-
-      alert("Please Enter Password");
-
+    if (password.length < 6) {
+      alert("Password must contain at least 6 characters");
       return;
-
     }
 
+    if (!/[A-Z]/.test(password)) {
+      alert("Password must contain at least one uppercase letter");
+      return;
+    }
 
-    // ==============================
+    if (!/[a-z]/.test(password)) {
+      alert("Password must contain at least one lowercase letter");
+      return;
+    }
+
+    if (!/[0-9]/.test(password)) {
+      alert("Password must contain at least one number");
+      return;
+    }
+
+    if (!/[!@#$%^&*]/.test(password)) {
+      alert("Password must contain at least one special character");
+      return;
+    }
+
     // STUDENT LOGIN
-    // ==============================
-
     if (isLogin) {
 
       api.post("/login", {
-
         email: email,
-
         password: password
-
       })
 
       .then((response) => {
 
         alert(response.data.message);
-
 
         if (response.data.message === "Login successful") {
 
@@ -84,15 +85,12 @@ function Login({ setPage }) {
             response.data.student.email
           );
 
-
           localStorage.setItem(
             "studentName",
             response.data.student.name
           );
 
-
           setPage("dashboard");
-
         }
 
       })
@@ -115,34 +113,23 @@ function Login({ setPage }) {
 
     }
 
-
-    // ==============================
-    // CREATE STUDENT ACCOUNT
-    // ==============================
-
+    // STUDENT CREATE ACCOUNT
     else {
 
       api.post("/signup", {
-
         name: name,
-
         email: email,
-
         password: password
-
       })
 
       .then((response) => {
 
         alert(response.data.message);
 
-
         setIsLogin(true);
 
         setName("");
-
         setEmail("");
-
         setPassword("");
 
       })
@@ -164,9 +151,7 @@ function Login({ setPage }) {
       });
 
     }
-
   };
-
 
   return (
 
@@ -181,15 +166,11 @@ function Login({ setPage }) {
           Student Internship Tracker
         </h2>
 
-
         <h3>
           {isLogin
             ? "Student Login"
             : "Create Student Account"}
         </h3>
-
-
-        {/* NAME */}
 
         {!isLogin && (
 
@@ -204,9 +185,6 @@ function Login({ setPage }) {
 
         )}
 
-
-        {/* EMAIL */}
-
         <input
           type="email"
           placeholder="Enter College Email"
@@ -215,9 +193,6 @@ function Login({ setPage }) {
             setEmail(e.target.value)
           }
         />
-
-
-        {/* PASSWORD */}
 
         <input
           type="password"
@@ -228,8 +203,21 @@ function Login({ setPage }) {
           }
         />
 
+        {!isLogin && (
 
-        {/* LOGIN / CREATE ACCOUNT */}
+          <p
+            style={{
+              fontSize: "13px",
+              color: "#555",
+              textAlign: "left"
+            }}
+          >
+            Password must contain at least 6 characters,
+            one uppercase letter, one lowercase letter,
+            one number and one special character.
+          </p>
+
+        )}
 
         <button type="submit">
 
@@ -239,20 +227,22 @@ function Login({ setPage }) {
 
         </button>
 
-
-        {/* STUDENT LOGIN / SIGNUP */}
-
         <p>
 
           {isLogin
             ? "Don't have an account? "
             : "Already have an account? "}
 
-
           <span
-            onClick={() =>
-              setIsLogin(!isLogin)
-            }
+            onClick={() => {
+
+              setIsLogin(!isLogin);
+
+              setName("");
+              setEmail("");
+              setPassword("");
+
+            }}
           >
 
             {isLogin
@@ -262,9 +252,6 @@ function Login({ setPage }) {
           </span>
 
         </p>
-
-
-        {/* FACULTY LOGIN */}
 
         {isLogin && (
 
@@ -284,7 +271,6 @@ function Login({ setPage }) {
     </div>
 
   );
-
 }
 
 export default Login;

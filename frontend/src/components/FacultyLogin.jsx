@@ -9,17 +9,30 @@ function FacultyLogin({ setPage }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // Email validation
   const emailPattern =
     /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
+  // Name validation - letters and spaces only
+  const namePattern =
+  /^[A-Za-z ]{3,}$/;
 
   const handleSubmit = (e) => {
 
     e.preventDefault();
 
-    // Faculty Create Account validation
-    if (!isLogin && name.trim() === "") {
-      alert("Please enter your name");
-      return;
+    // Name validation for Create Account
+    if (!isLogin) {
+
+      if (name.trim() === "") {
+        alert("Please enter your name");
+        return;
+      }
+
+      if (!namePattern.test(name)) {
+        alert("Name should contain atleast 3 letters");
+        return;
+      }
     }
 
     // Email validation
@@ -28,16 +41,37 @@ function FacultyLogin({ setPage }) {
       return;
     }
 
-    // Password validation
-    if (password.trim() === "") {
-      alert("Please enter password");
+    // Password minimum length
+    if (password.length < 6) {
+      alert("Password must contain at least 6 characters");
       return;
     }
 
-    // =====================================
-    // FACULTY LOGIN
-    // =====================================
+    // Uppercase validation
+    if (!/[A-Z]/.test(password)) {
+      alert("Password must contain at least one uppercase letter");
+      return;
+    }
 
+    // Lowercase validation
+    if (!/[a-z]/.test(password)) {
+      alert("Password must contain at least one lowercase letter");
+      return;
+    }
+
+    // Number validation
+    if (!/[0-9]/.test(password)) {
+      alert("Password must contain at least one number");
+      return;
+    }
+
+    // Special character validation
+    if (!/[!@#$%^&*]/.test(password)) {
+      alert("Password must contain at least one special character");
+      return;
+    }
+
+    // FACULTY LOGIN
     if (isLogin) {
 
       api.post("/faculty/login", {
@@ -81,10 +115,7 @@ function FacultyLogin({ setPage }) {
 
     }
 
-    // =====================================
     // FACULTY CREATE ACCOUNT
-    // =====================================
-
     else {
 
       api.post("/faculty/signup", {
@@ -97,7 +128,6 @@ function FacultyLogin({ setPage }) {
 
         alert(response.data.message);
 
-        // Go back to Faculty Login
         setIsLogin(true);
 
         setName("");
@@ -145,9 +175,6 @@ function FacultyLogin({ setPage }) {
             : "Create Faculty Account"}
         </h3>
 
-
-        {/* FACULTY NAME */}
-
         {!isLogin && (
 
           <input
@@ -161,9 +188,6 @@ function FacultyLogin({ setPage }) {
 
         )}
 
-
-        {/* EMAIL */}
-
         <input
           type="email"
           placeholder="Enter Faculty Email"
@@ -173,8 +197,20 @@ function FacultyLogin({ setPage }) {
           }
         />
 
-
-        {/* PASSWORD */}
+        {!isLogin && (
+          <p
+            style={{
+              fontSize: "13px",
+              color: "#555",
+              textAlign: "left",
+              margin: "5px 0"
+            }}
+          >
+            Password must contain at least 6 characters,
+            one uppercase letter, one lowercase letter,
+            one number and one special character.
+          </p>
+        )}
 
         <input
           type="password"
@@ -185,9 +221,6 @@ function FacultyLogin({ setPage }) {
           }
         />
 
-
-        {/* MAIN BUTTON */}
-
         <button type="submit">
 
           {isLogin
@@ -195,9 +228,6 @@ function FacultyLogin({ setPage }) {
             : "Create Faculty Account"}
 
         </button>
-
-
-        {/* LOGIN / CREATE ACCOUNT SWITCH */}
 
         <p>
 
@@ -224,9 +254,6 @@ function FacultyLogin({ setPage }) {
           </span>
 
         </p>
-
-
-        {/* BACK TO STUDENT LOGIN */}
 
         <button
           type="button"
